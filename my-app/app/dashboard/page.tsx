@@ -58,29 +58,12 @@ const statsCards = [
 ];
 
 const alertasRecentes = [
-  { name: 'Google', status: 'active' },
-  { name: 'YouTube', status: 'active' },
-  { name: 'Instagram', status: 'active' },
-  { name: 'Pinterest', status: 'inactive' },
-  { name: 'Facebook', status: 'active' },
-  { name: 'Twitter', status: 'inactive' },
-];
-
-const activities = [
-  { user: 'Changed the style.', time: 'Just now', avatar: '👤' },
-  { user: 'Released a new version.', time: '59 minutes ago', avatar: '👥' },
-  { user: 'Submitted a bug.', time: '12 hours ago', avatar: '👤' },
-  { user: 'Modified A data in Page X.', time: 'Today, 11:59 AM', avatar: '👤' },
-  { user: 'Deleted a page in Project X.', time: 'Feb 2, 2023', avatar: '👤' },
-];
-
-const contacts = [
-  'Natali Craig',
-  'Drew Cano',
-  'Andi Lane',
-  'Koray Okumus',
-  'Kate Morrison',
-  'Melody Macy',
+  { name: 'Critico', status: 'active' },
+  { name: 'Critico', status: 'active' },
+  { name: 'Critico', status: 'active' },
+  { name: 'Baixo', status: 'inactive' },
+  { name: 'Critico', status: 'active' },
+  { name: 'Medio', status: 'inactive' },
 ];
 
 export default function DashboardPage() {
@@ -145,7 +128,7 @@ export default function DashboardPage() {
 
   // Dados do gráfico de rosca (Impacto Ambiental)
   const doughnutData = {
-    labels: ['United States', 'Canada', 'Mexico', 'Other'],
+    labels: ['Ibura', 'Ilha do Leite', 'Recife Antigo', 'Outros'],
     datasets: [
       {
         data: [52.1, 22.8, 13.9, 11.2],
@@ -182,16 +165,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {/* Header */}
       <div className="border-b border-zinc-800 bg-zinc-900/50 px-8 py-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">DASHBOARD</h1>
-          <div className="flex items-center gap-4">
-            <select className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 focus:border-cyan-400 focus:outline-none">
-              <option>Today</option>
-              <option>This Week</option>
-              <option>This Month</option>
-            </select>
-          </div>
-        </div>
+        <h1 className="text-3xl font-bold">DASHBOARD</h1>
       </div>
 
       <div className="p-8">
@@ -303,7 +277,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Locais Descarte (Mapa placeholder) */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <div className="lg:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="mb-4 text-lg font-semibold">Locais Descarte</h2>
             <div className="flex h-64 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-950/30 to-blue-950/30">
               <div className="relative h-full w-full">
@@ -315,40 +289,6 @@ export default function DashboardPage() {
                 <div className="absolute bottom-1/3 right-1/2 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
               </div>
             </div>
-          </div>
-
-          {/* Activities */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="mb-4 text-lg font-semibold">Activities</h2>
-            <div className="space-y-4">
-              {activities.map((activity, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 text-sm">
-                    {activity.avatar}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-zinc-100">{activity.user}</p>
-                    <p className="text-xs text-zinc-500">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Contacts */}
-        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="mb-4 text-lg font-semibold">Contacts</h2>
-          <div className="flex flex-wrap gap-3">
-            {contacts.map((contact, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2"
-              >
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600" />
-                <span className="text-sm text-zinc-100">{contact}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>
