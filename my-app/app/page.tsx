@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 function Field({
   id,
@@ -48,6 +49,8 @@ const ROTATING_TEXTS = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
+  
   // login
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -72,7 +75,7 @@ export default function LoginPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prev) => (prev + 1) % ROTATING_TEXTS.length);
-    }, 4000); // troca a cada 4 segundos
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -81,7 +84,11 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      // integração futura
+      // Simulação de login - integração futura com API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Redireciona para o dashboard
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.message ?? 'Erro ao entrar');
     } finally {
@@ -94,9 +101,12 @@ export default function LoginPage() {
     setCadError(null);
     setCadLoading(true);
     try {
-      // integração futura
-      // ao finalizar com sucesso:
-      // setOpenCadastro(false);
+      // Simulação de cadastro - integração futura com API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Fecha o modal e redireciona
+      setOpenCadastro(false);
+      router.push('/dashboard');
     } catch (err: any) {
       setCadError(err.message ?? 'Erro ao cadastrar');
     } finally {
