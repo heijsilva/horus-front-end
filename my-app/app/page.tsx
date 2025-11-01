@@ -251,7 +251,7 @@ export default function LoginPage() {
           <div className="absolute inset-0 flex items-center justify-center p-10">
             <div className="relative w-full max-w-2xl aspect-[16/10] rounded-xl overflow-hidden shadow-2xl ring-1 ring-cyan-300/20">
               <Image
-                src="/inicio.png"
+                src="/inicio3.gif"
                 alt="Painel inicial"
                 fill
                 priority
