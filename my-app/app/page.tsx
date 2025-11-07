@@ -244,21 +244,18 @@ export default function LoginPage() {
             </svg>
           </div>
 
-          {/* moldura/acento */}
-          <div className="absolute inset-6 rounded-2xl ring-1 ring-cyan-400/30" />
-
-          {/* imagem principal */}
-          <div className="absolute inset-0 flex items-center justify-center p-10">
-            <div className="relative w-full max-w-2xl aspect-[16/10] rounded-xl overflow-hidden shadow-2xl ring-1 ring-cyan-300/20">
-              <Image
-                src="/inicio3.gif"
-                alt="Painel inicial"
-                fill
-                priority
-                className="object-cover"
-              />
-              {/* overlay sutil para combinar com a paleta */}
-              <div className="absolute inset-0 bg-cyan-300/10 mix-blend-soft-light" />
+          {/* imagem principal - SEM moldura e MAIOR */}
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <div className="relative w-[95%] h-[80%]">
+                <Image
+                  src="/inicio3.gif"
+                  alt="Painel inicial"
+                  fill
+                  priority
+                  className="object-contain"
+                />
+              </div>
             </div>
           </div>
 
