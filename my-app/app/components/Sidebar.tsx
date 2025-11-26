@@ -1,11 +1,35 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { create } from 'zustand';
+import { ReactNode } from 'react';
+// import { usePathname } from 'next/navigation'; // Removido para resolver o erro de compilação no Canvas.
+
+// ===============================================
+// 1. ZUSTAND STORE para o estado da Sidebar
+// ===============================================
+
+interface SidebarState {
+  isCollapsed: boolean;
+  toggleCollapse: () => void;
+}
+
+// Criação do store Zustand para gerenciar o estado da barra lateral
+const useSidebarStore = create<SidebarState>((set) => ({
+  isCollapsed: false,
+  
+  toggleCollapse: () => 
+    set((state) => ({ 
+      isCollapsed: !state.isCollapsed 
+    })),
+}));
+
+
+// ===============================================
+// 2. TIPOS DE NAVEGAÇÃO
+// ===============================================
 
 interface NavItem {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   href: string;
 }
@@ -64,15 +88,6 @@ const navSections: NavSection[] = [
       {
         icon: (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-        ),
-        label: 'Gráficos',
-        href: '/graficos',
-      },
-      {
-        icon: (
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
           </svg>
         ),
@@ -93,13 +108,18 @@ const navSections: NavSection[] = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  // O componente usa o hook Zustand para acessar o estado e a função de toggle
+  const isCollapsed = useSidebarStore((state) => state.isCollapsed);
+  const toggleCollapse = useSidebarStore((state) => state.toggleCollapse);
+  
+  // Simula o pathname para que a lógica de "isActive" funcione no Canvas.
+  // No seu Codespace, você deve usar: const pathname = usePathname();
+  const pathname = '/dashboard'; 
 
   return (
     <aside
       className={`fixed left-0 top-0 h-screen bg-zinc-900 border-r border-zinc-800 transition-all duration-300 flex flex-col ${
-        collapsed ? 'w-20' : 'w-64'
+        isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Header com avatar do usuário */}
@@ -108,7 +128,7 @@ export default function Sidebar() {
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-zinc-900 font-semibold flex-shrink-0">
             U
           </div>
-          {!collapsed && (
+          {!isCollapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-zinc-100 truncate">usuário</p>
             </div>
@@ -116,14 +136,14 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Tabs: Favoritos / Recently */}
-      {!collapsed && (
+      {/* Tabs: Favoritos / Recentes */}
+      {!isCollapsed && (
         <div className="flex border-b border-zinc-800">
           <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-100 border-b-2 border-cyan-400">
             Favoritos
           </button>
           <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-100">
-            Recently
+            Recentes
           </button>
         </div>
       )}
@@ -132,28 +152,29 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         {navSections.map((section, sectionIdx) => (
           <div key={sectionIdx} className="mb-6">
-            {!collapsed && section.title && (
+            {!isCollapsed && section.title && (
               <h3 className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                 {section.title}
               </h3>
             )}
             <ul className="space-y-1">
               {section.items.map((item) => {
+                // Lógica de ativação: verifica se o pathname atual corresponde ao href do item
                 const isActive = pathname === item.href;
                 return (
                   <li key={item.href}>
-                    <Link
+                    <a
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isActive
                           ? 'bg-cyan-400/10 text-cyan-400'
                           : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
                       }`}
-                      title={collapsed ? item.label : undefined}
+                      title={isCollapsed ? item.label : undefined}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
-                      {!collapsed && <span>{item.label}</span>}
-                    </Link>
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </a>
                   </li>
                 );
               })}
@@ -166,23 +187,23 @@ export default function Sidebar() {
       <div className="p-3 border-t border-zinc-800">
         <button
           className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
-          title={collapsed ? 'Sair' : undefined}
+          title={isCollapsed ? 'Sair' : undefined}
         >
           <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
           </svg>
-          {!collapsed && <span>Sair</span>}
+          {!isCollapsed && <span>Sair</span>}
         </button>
       </div>
 
-      {/* Toggle collapse (opcional) */}
+      {/* Toggle collapse */}
       <button
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={toggleCollapse}
         className="absolute -right-3 top-20 w-6 h-6 bg-zinc-800 border border-zinc-700 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700 transition-colors"
-        aria-label={collapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
+        aria-label={isCollapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
       >
         <svg
-          className={`w-3 h-3 transition-transform ${collapsed ? 'rotate-180' : ''}`}
+          className={`w-3 h-3 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >

@@ -1,8 +1,6 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 function Field({
   id,
@@ -49,15 +47,13 @@ const ROTATING_TEXTS = [
 ];
 
 export default function LoginPage() {
-  const router = useRouter();
   
-  // login
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loginSuccess, setLoginSuccess] = useState(false); // novo estado de sucesso
 
-  // cadastro (modal)
   const [openCadastro, setOpenCadastro] = useState(false);
   const [cadNome, setCadNome] = useState('');
   const [cadEmail, setCadEmail] = useState('');
@@ -68,8 +64,8 @@ export default function LoginPage() {
   const [cadSenha, setCadSenha] = useState('');
   const [cadLoading, setCadLoading] = useState(false);
   const [cadError, setCadError] = useState<string | null>(null);
+  const [cadastroSuccess, setCadastroSuccess] = useState(false); // novo estado de sucesso
 
-  // textos rotativos
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
   useEffect(() => {
@@ -82,15 +78,16 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setLoginSuccess(false);
     setLoading(true);
     try {
-      // Simulação de login - integração futura com API
+      // simulação de login
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Redireciona para o dashboard
-      router.push('/dashboard');
+      // o redirecionamento (router.push) foi removido devido a um erro de ambiente
+      setLoginSuccess(true);
     } catch (err: any) {
-      setError(err.message ?? 'Erro ao entrar');
+      setError(err.message ?? 'erro ao entrar');
     } finally {
       setLoading(false);
     }
@@ -99,16 +96,19 @@ export default function LoginPage() {
   async function handleCadastro(e: React.FormEvent) {
     e.preventDefault();
     setCadError(null);
+    setCadastroSuccess(false);
     setCadLoading(true);
     try {
-      // Simulação de cadastro - integração futura com API
+      // simulação de cadastro
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Fecha o modal e redireciona
+      // fecha modal
       setOpenCadastro(false);
-      router.push('/dashboard');
+      
+      // o redirecionamento (router.push) foi removido devido a um erro de ambiente
+      setCadastroSuccess(true);
     } catch (err: any) {
-      setCadError(err.message ?? 'Erro ao cadastrar');
+      setCadError(err.message ?? 'erro ao cadastrar');
     } finally {
       setCadLoading(false);
     }
@@ -116,57 +116,64 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-zinc-900 text-zinc-100">
+      {/* mensagem de sucesso após cadastro */}
+      {cadastroSuccess && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-cyan-900/90 text-center p-3 text-sm text-cyan-200">
+            cadastro efetuado com sucesso! o redirecionamento foi desativado pelo ambiente de desenvolvimento.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
-        {/* Coluna esquerda */}
+        {/* coluna esquerda */}
         <div className="relative flex items-center justify-center">
           <div className="w-full max-w-md px-6">
-            {/* Logo centralizada */}
+            {/* logo centralizada */}
             <div className="mb-10 flex justify-center">
-              <Image
+              <img
                 src="/logo.png"
                 alt="HORUS"
                 width={280}
                 height={70}
-                priority
                 className="h-auto w-auto"
               />
             </div>
 
-            {/* Card do formulário */}
+            {/* card do formulário */}
             <div className="rounded-xl border border-zinc-700 bg-zinc-900/70 shadow-lg backdrop-blur">
               <form onSubmit={handleLogin} className="p-6 space-y-5">
                 <Field
                   id="email"
-                  label="Email"
+                  label="Email" 
                   type="email"
                   value={email}
                   onChange={setEmail}
-                  placeholder="Digite seu email"
+                  placeholder="digite seu email"
                 />
                 <Field
                   id="senha"
-                  label="Senha"
+                  label="Senha" 
                   type="password"
                   value={senha}
                   onChange={setSenha}
-                  placeholder="Digite sua senha"
+                  placeholder="digite sua senha"
                 />
 
                 {error && <p className="text-sm text-red-400">{error}</p>}
+                {loginSuccess && <p className="text-sm text-green-400">login efetuado com sucesso! (sem redirecionamento)</p>}
 
                 <div className="flex items-center justify-between pt-1">
                   <button
                     type="button"
                     className="text-sm text-zinc-300 hover:text-zinc-100"
                   >
-                    Voltar
+                    Voltar 
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="inline-flex min-w-[120px] justify-center rounded-md bg-zinc-100 text-zinc-900 px-4 py-2 text-sm font-medium hover:bg-white disabled:opacity-60"
                   >
-                    {loading ? 'Entrando...' : 'Entrar'}
+                    {loading ? 'entrando...' : 'Entrar' }
                   </button>
                 </div>
 
@@ -176,7 +183,7 @@ export default function LoginPage() {
                     className="text-zinc-300 underline underline-offset-2 hover:text-zinc-100"
                     onClick={(e) => e.preventDefault()}
                   >
-                    Esqueceu sua senha?
+                    Esqueceu sua senha? 
                   </a>
 
                   <button
@@ -184,22 +191,22 @@ export default function LoginPage() {
                     onClick={() => setOpenCadastro(true)}
                     className="text-cyan-300 hover:text-cyan-200 font-medium underline-offset-2 hover:underline"
                   >
-                    Cadastre-se
+                    Cadastre-se 
                   </button>
                 </div>
               </form>
             </div>
 
-            {/* Divisor "Entrar com" - melhor visibilidade */}
+            {/* divisor "entrar com" */}
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-zinc-600" />
-              <span className="text-sm font-medium text-zinc-300">Entrar com</span>
+              <span className="text-sm font-medium text-zinc-300">Entrar com </span>
               <div className="h-px flex-1 bg-zinc-600" />
             </div>
 
-            {/* Botões sociais (somente visual) - ícones centralizados */}
+            {/* botões sociais */}
             <div className="space-y-3">
-              {/* Microsoft */}
+              {/* microsoft */}
               <button
                 type="button"
                 aria-disabled="true"
@@ -209,10 +216,10 @@ export default function LoginPage() {
                 <svg viewBox="0 0 23 23" className="h-5 w-5" aria-hidden="true">
                   <path fill="#F35325" d="M1 1h10v10H1z"/><path fill="#81BC06" d="M12 1h10v10H12z"/><path fill="#05A6F0" d="M1 12h10v10H1z"/><path fill="#FFBA08" d="M12 12h10v10H12z"/>
                 </svg>
-                <span>com a Microsoft</span>
+                <span>com a Microsoft </span>
               </button>
 
-              {/* Apple */}
+              {/* apple */}
               <button
                 type="button"
                 aria-disabled="true"
@@ -222,13 +229,13 @@ export default function LoginPage() {
                 <svg viewBox="0 0 24 24" className="h-5 w-5 fill-zinc-100" aria-hidden="true">
                   <path d="M16.365 1.43c0 1.14-.466 2.226-1.25 3.046-.8.836-2.1 1.486-3.263 1.39-.14-1.12.47-2.31 1.23-3.07.82-.82 2.22-1.41 3.283-1.366zM21.5 17.23c-.46 1.03-.675 1.48-1.26 2.39-.82 1.24-1.98 2.78-3.43 2.8-1.28.02-1.62-.82-3.38-.82-1.77 0-2.14.8-3.41.84-1.45.03-2.56-1.34-3.39-2.58-2.32-3.4-2.56-7.39-1.13-9.51.99-1.49 2.56-2.37 4.32-2.4 1.35-.03 2.63.9 3.38.9.74 0 2.35-1.11 3.97-.95.68.03 2.6.28 3.83 2.13-3.37 1.84-2.83 6.64.48 7.19z"/>
                 </svg>
-                <span>com a Apple</span>
+                <span>com a Apple </span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Coluna direita com imagem e textos rotativos */}
+        {/* coluna direita com imagem e textos rotativos */}
         <div className="hidden md:block relative">
           {/* fundo em tons escuros e acento ciano/teal */}
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0b2b33] to-[#0f3b45]" />
@@ -244,22 +251,20 @@ export default function LoginPage() {
             </svg>
           </div>
 
-          {/* imagem principal - SEM moldura e MAIOR */}
+          {/* imagem principal */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="relative w-full h-full flex items-center justify-center">
               <div className="relative w-[95%] h-[80%]">
-                <Image
+                <img
                   src="/inicio3.gif"
-                  alt="Painel inicial"
-                  fill
-                  priority
-                  className="object-contain"
+                  alt="painel inicial"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
           </div>
 
-          {/* Textos rotativos animados */}
+          {/* textos rotativos animados */}
           <div className="absolute inset-x-0 bottom-16 flex justify-center px-10">
             <div className="relative w-full max-w-2xl h-24 flex items-center justify-center">
               {ROTATING_TEXTS.map((text, index) => (
@@ -282,7 +287,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Modal de cadastro */}
+      {/* modal de cadastro */}
       {openCadastro && (
         <div
           role="dialog"
@@ -292,9 +297,9 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-black/60" onClick={() => setOpenCadastro(false)} />
           <div className="relative w-full max-w-2xl rounded-xl bg-zinc-900 text-zinc-100 shadow-xl border border-zinc-700">
             <div className="flex items-center justify-between border-b border-zinc-700 px-5 py-3">
-              <h2 className="text-base font-semibold">Cadastro</h2>
+              <h2 className="text-base font-semibold">Cadastro </h2>
               <button
-                aria-label="Fechar cadastro"
+                aria-label="fechar cadastro"
                 onClick={() => setOpenCadastro(false)}
                 className="rounded p-1 hover:bg-zinc-800"
               >
@@ -302,13 +307,13 @@ export default function LoginPage() {
               </button>
             </div>
             <form onSubmit={handleCadastro} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
-              <Field id="cadNome" label="Nome" value={cadNome} onChange={setCadNome} placeholder="Seu nome completo" />
-              <Field id="cadEmail" label="Email" type="email" value={cadEmail} onChange={setCadEmail} placeholder="seu@email.com" />
-              <Field id="cadCpf" label="CPF" value={cadCpf} onChange={setCadCpf} placeholder="000.000.000-00" />
-              <Field id="cadCodFunc" label="Código do funcionário" value={cadCodFunc} onChange={setCadCodFunc} placeholder="Ex: 12345" />
-              <Field id="cadTelefone" label="Telefone" value={cadTelefone} onChange={setCadTelefone} placeholder="(00) 00000-0000" />
-              <Field id="cadCep" label="CEP" value={cadCep} onChange={setCadCep} placeholder="00000-000" />
-              <Field id="cadSenha" label="Senha" type="password" value={cadSenha} onChange={setCadSenha} placeholder="Crie uma senha" />
+              <Field id="cadNome" label="Nome" value={cadNome} onChange={setCadNome} placeholder="seu nome completo" /> 
+              <Field id="cadEmail" label="Email" type="email" value={cadEmail} onChange={setCadEmail} placeholder="seu@email.com" /> 
+              <Field id="cadCpf" label="CPF" value={cadCpf} onChange={setCadCpf} placeholder="000.000.000-00" /> 
+              <Field id="cadCodFunc" label="Código do Funcionário" value={cadCodFunc} onChange={setCadCodFunc} placeholder="ex: 12345" /> 
+              <Field id="cadTelefone" label="Telefone" value={cadTelefone} onChange={setCadTelefone} placeholder="(00) 00000-0000" /> 
+              <Field id="cadCep" label="CEP" value={cadCep} onChange={setCadCep} placeholder="00000-000" /> 
+              <Field id="cadSenha" label="Senha" type="password" value={cadSenha} onChange={setCadSenha} placeholder="crie uma senha" /> 
 
               {cadError && (
                 <div className="md:col-span-2">
@@ -322,14 +327,14 @@ export default function LoginPage() {
                   onClick={() => setOpenCadastro(false)}
                   className="text-sm text-zinc-300 hover:text-zinc-100"
                 >
-                  Cancelar
+                  Cancelar 
                 </button>
                 <button
                   type="submit"
                   disabled={cadLoading}
                   className="inline-flex justify-center rounded-md bg-cyan-400 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-cyan-300 disabled:opacity-60"
                 >
-                  {cadLoading ? 'Cadastrando...' : 'Cadastrar'}
+                  {cadLoading ? 'Cadastrando...' : 'Cadastrar' }
                 </button>
               </div>
             </form>
