@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 function Field({
   id,
@@ -47,6 +48,7 @@ const ROTATING_TEXTS = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
   
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -84,8 +86,9 @@ export default function LoginPage() {
       // simulação de login
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // o redirecionamento (router.push) foi removido devido a um erro de ambiente
       setLoginSuccess(true);
+      // redirecionar para o dashboard
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.message ?? 'erro ao entrar');
     } finally {
@@ -105,8 +108,9 @@ export default function LoginPage() {
       // fecha modal
       setOpenCadastro(false);
       
-      // o redirecionamento (router.push) foi removido devido a um erro de ambiente
       setCadastroSuccess(true);
+      // redirecionar para o dashboard após cadastro
+      router.push('/dashboard');
     } catch (err: any) {
       setCadError(err.message ?? 'erro ao cadastrar');
     } finally {
@@ -119,7 +123,7 @@ export default function LoginPage() {
       {/* mensagem de sucesso após cadastro */}
       {cadastroSuccess && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-cyan-900/90 text-center p-3 text-sm text-cyan-200">
-            cadastro efetuado com sucesso! o redirecionamento foi desativado pelo ambiente de desenvolvimento.
+            cadastro efetuado com sucesso! redirecionando para o dashboard...
         </div>
       )}
 
@@ -159,7 +163,7 @@ export default function LoginPage() {
                 />
 
                 {error && <p className="text-sm text-red-400">{error}</p>}
-                {loginSuccess && <p className="text-sm text-green-400">login efetuado com sucesso! (sem redirecionamento)</p>}
+                {loginSuccess && <p className="text-sm text-green-400">login efetuado com sucesso! redirecionando...</p>}
 
                 <div className="flex items-center justify-between pt-1">
                   <button

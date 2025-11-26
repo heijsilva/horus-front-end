@@ -1,31 +1,10 @@
 'use client';
 
-import { create } from 'zustand';
 import { ReactNode } from 'react';
-// import { usePathname } from 'next/navigation'; // Removido para resolver o erro de compilação no Canvas.
+import { usePathname } from 'next/navigation';
 
 // ===============================================
-// 1. ZUSTAND STORE para o estado da Sidebar
-// ===============================================
-
-interface SidebarState {
-  isCollapsed: boolean;
-  toggleCollapse: () => void;
-}
-
-// Criação do store Zustand para gerenciar o estado da barra lateral
-const useSidebarStore = create<SidebarState>((set) => ({
-  isCollapsed: false,
-  
-  toggleCollapse: () => 
-    set((state) => ({ 
-      isCollapsed: !state.isCollapsed 
-    })),
-}));
-
-
-// ===============================================
-// 2. TIPOS DE NAVEGAÇÃO
+//  TIPOS DE NAVEGAÇÃO
 // ===============================================
 
 interface NavItem {
@@ -79,7 +58,11 @@ const navSections: NavSection[] = [
         icon: (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-            <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+              clipRule="evenodd"
+            />
           </svg>
         ),
         label: 'Histórico',
@@ -88,7 +71,11 @@ const navSections: NavSection[] = [
       {
         icon: (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z"
+              clipRule="evenodd"
+            />
           </svg>
         ),
         label: 'Mapas',
@@ -97,7 +84,11 @@ const navSections: NavSection[] = [
       {
         icon: (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+              clipRule="evenodd"
+            />
           </svg>
         ),
         label: 'Configurações',
@@ -108,59 +99,43 @@ const navSections: NavSection[] = [
 ];
 
 export default function Sidebar() {
-  // O componente usa o hook Zustand para acessar o estado e a função de toggle
-  const isCollapsed = useSidebarStore((state) => state.isCollapsed);
-  const toggleCollapse = useSidebarStore((state) => state.toggleCollapse);
-  
-  // Simula o pathname para que a lógica de "isActive" funcione no Canvas.
-  // No seu Codespace, você deve usar: const pathname = usePathname();
-  const pathname = '/dashboard'; 
+  const pathname = usePathname(); // <<<<<<<<<< CORREÇÃO FINAL
 
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen bg-zinc-900 border-r border-zinc-800 transition-all duration-300 flex flex-col ${
-        isCollapsed ? 'w-20' : 'w-64'
-      }`}
-    >
-      {/* Header com avatar do usuário */}
+    <aside className="fixed left-0 top-0 w-64 h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col">
+      {/* Header */}
       <div className="p-4 border-b border-zinc-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-zinc-900 font-semibold flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-zinc-900 font-semibold">
             U
           </div>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-zinc-100 truncate">usuário</p>
-            </div>
-          )}
+          <p className="text-sm font-medium text-zinc-100 truncate">usuário</p>
         </div>
       </div>
 
-      {/* Tabs: Favoritos / Recentes */}
-      {!isCollapsed && (
-        <div className="flex border-b border-zinc-800">
-          <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-100 border-b-2 border-cyan-400">
-            Favoritos
-          </button>
-          <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-100">
-            Recentes
-          </button>
-        </div>
-      )}
+      {/* Tabs */}
+      <div className="flex border-b border-zinc-800">
+        <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-100 border-b-2 border-cyan-400">
+          Favoritos
+        </button>
+        <button className="flex-1 px-4 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-100">
+          Recentes
+        </button>
+      </div>
 
-      {/* Navegação */}
+      {/* Menu */}
       <nav className="flex-1 overflow-y-auto py-4 px-3">
-        {navSections.map((section, sectionIdx) => (
-          <div key={sectionIdx} className="mb-6">
-            {!isCollapsed && section.title && (
+        {navSections.map((section, idx) => (
+          <div key={idx} className="mb-6">
+            {section.title && (
               <h3 className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                 {section.title}
               </h3>
             )}
             <ul className="space-y-1">
               {section.items.map((item) => {
-                // Lógica de ativação: verifica se o pathname atual corresponde ao href do item
                 const isActive = pathname === item.href;
+
                 return (
                   <li key={item.href}>
                     <a
@@ -170,10 +145,9 @@ export default function Sidebar() {
                           ? 'bg-cyan-400/10 text-cyan-400'
                           : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
                       }`}
-                      title={isCollapsed ? item.label : undefined}
                     >
-                      <span className="flex-shrink-0">{item.icon}</span>
-                      {!isCollapsed && <span>{item.label}</span>}
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
                     </a>
                   </li>
                 );
@@ -183,33 +157,19 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Botão Sair */}
+      {/* Footer */}
       <div className="p-3 border-t border-zinc-800">
-        <button
-          className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
-          title={isCollapsed ? 'Sair' : undefined}
-        >
-          <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+        <button className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+              clipRule="evenodd"
+            />
           </svg>
-          {!isCollapsed && <span>Sair</span>}
+          <span>Sair</span>
         </button>
       </div>
-
-      {/* Toggle collapse */}
-      <button
-        onClick={toggleCollapse}
-        className="absolute -right-3 top-20 w-6 h-6 bg-zinc-800 border border-zinc-700 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700 transition-colors"
-        aria-label={isCollapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
-      >
-        <svg
-          className={`w-3 h-3 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-        </svg>
-      </button>
     </aside>
   );
 }
