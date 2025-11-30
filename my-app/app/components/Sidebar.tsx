@@ -99,7 +99,7 @@ const navSections: NavSection[] = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname(); // <<<<<<<<<< CORREÇÃO FINAL
+  const pathname = usePathname(); 
 
   return (
     <aside className="fixed left-0 top-0 w-64 h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col">
