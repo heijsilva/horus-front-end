@@ -17,9 +17,15 @@ class UserLogin(BaseModel):
     email: EmailStr
     senha: str
 
-class UserResponse(UserBase):
-    id: str = Field(alias="_id")
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    nome: str
+    cpf: str
+    codigo_funcionario: str
+    telefone: str
+    cep: str
     created_at: datetime
 
     class Config:
-        populate_by_name = True
+        from_attributes = True
