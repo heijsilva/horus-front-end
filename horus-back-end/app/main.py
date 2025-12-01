@@ -6,11 +6,9 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     print("🚀 Iniciando API Horus...")
     test_connection()
     yield
-    # Shutdown
     print("👋 Encerrando API Horus...")
 
 app = FastAPI(
@@ -22,16 +20,19 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "https://studious-space-journey-pxw44v6xvxg2659p-3000.app.github.dev",
+        "*"
+    ],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Rotas
 app.include_router(auth.router)
 
 @app.get("/", tags=["Root"])
@@ -60,3 +61,4 @@ async def health_check():
             "status": "unhealthy",
             "error": str(e)
         }
+        

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const API_URL = 'https://studious-space-journey-pxw44v6xvxg2659p-8000.app.github.dev';
+
 function Field({
   id,
   label,
@@ -54,7 +56,7 @@ export default function LoginPage() {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loginSuccess, setLoginSuccess] = useState(false); // novo estado de sucesso
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const [openCadastro, setOpenCadastro] = useState(false);
   const [cadNome, setCadNome] = useState('');
@@ -66,7 +68,7 @@ export default function LoginPage() {
   const [cadSenha, setCadSenha] = useState('');
   const [cadLoading, setCadLoading] = useState(false);
   const [cadError, setCadError] = useState<string | null>(null);
-  const [cadastroSuccess, setCadastroSuccess] = useState(false); // novo estado de sucesso
+  const [cadastroSuccess, setCadastroSuccess] = useState(false);
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
@@ -82,15 +84,45 @@ export default function LoginPage() {
     setError(null);
     setLoginSuccess(false);
     setLoading(true);
+    
+    const url = `${API_URL}/auth/login`;
+    console.log('🔵 Tentando login em:', url);
+    console.log('📧 Email:', email);
+    
     try {
-      // simulação de login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      });
+
+      console.log('📊 Status da resposta:', response.status);
+      const data = await response.json();
+      console.log('📦 Dados recebidos:', data);
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Erro ao fazer login');
+      }
+
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
       setLoginSuccess(true);
-      // redirecionar para o dashboard
-      router.push('/dashboard');
+      console.log('✅ Login bem-sucedido!');
+      
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+      
     } catch (err: any) {
-      setError(err.message ?? 'erro ao entrar');
+      console.error('❌ Erro completo:', err);
+      console.error('❌ Mensagem:', err.message);
+      setError(err.message ?? 'Erro ao entrar');
     } finally {
       setLoading(false);
     }
@@ -101,18 +133,51 @@ export default function LoginPage() {
     setCadError(null);
     setCadastroSuccess(false);
     setCadLoading(true);
+    
+    const url = `${API_URL}/auth/cadastro`;
+    console.log('🔵 Tentando cadastro em:', url);
+    console.log('📧 Email:', cadEmail);
+    
     try {
-      // simulação de cadastro
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // fecha modal
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: cadNome,
+          email: cadEmail,
+          cpf: cadCpf,
+          codigo_funcionario: cadCodFunc,
+          telefone: cadTelefone,
+          cep: cadCep,
+          senha: cadSenha,
+        }),
+      });
+
+      console.log('📊 Status da resposta:', response.status);
+      const data = await response.json();
+      console.log('📦 Dados recebidos:', data);
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Erro ao cadastrar');
+      }
+
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
       setOpenCadastro(false);
-      
       setCadastroSuccess(true);
-      // redirecionar para o dashboard após cadastro
-      router.push('/dashboard');
+      console.log('✅ Cadastro bem-sucedido!');
+      
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+      
     } catch (err: any) {
-      setCadError(err.message ?? 'erro ao cadastrar');
+      console.error('❌ Erro completo:', err);
+      console.error('❌ Mensagem:', err.message);
+      setCadError(err.message ?? 'Erro ao cadastrar');
     } finally {
       setCadLoading(false);
     }
@@ -120,7 +185,6 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-zinc-900 text-zinc-100">
-      {/* mensagem de sucesso após cadastro */}
       {cadastroSuccess && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-cyan-900/90 text-center p-3 text-sm text-cyan-200">
             cadastro efetuado com sucesso! redirecionando para o dashboard...
@@ -128,10 +192,8 @@ export default function LoginPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
-        {/* coluna esquerda */}
         <div className="relative flex items-center justify-center">
           <div className="w-full max-w-md px-6">
-            {/* logo centralizada */}
             <div className="mb-10 flex justify-center">
               <img
                 src="/logo.png"
@@ -142,7 +204,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* card do formulário */}
             <div className="rounded-xl border border-zinc-700 bg-zinc-900/70 shadow-lg backdrop-blur">
               <form onSubmit={handleLogin} className="p-6 space-y-5">
                 <Field
@@ -201,16 +262,13 @@ export default function LoginPage() {
               </form>
             </div>
 
-            {/* divisor "entrar com" */}
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-zinc-600" />
               <span className="text-sm font-medium text-zinc-300">Entrar com </span>
               <div className="h-px flex-1 bg-zinc-600" />
             </div>
 
-            {/* botões sociais */}
             <div className="space-y-3">
-              {/* microsoft */}
               <button
                 type="button"
                 aria-disabled="true"
@@ -223,7 +281,6 @@ export default function LoginPage() {
                 <span>com a Microsoft </span>
               </button>
 
-              {/* apple */}
               <button
                 type="button"
                 aria-disabled="true"
@@ -239,12 +296,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* coluna direita com imagem e textos rotativos */}
         <div className="hidden md:block relative">
-          {/* fundo em tons escuros e acento ciano/teal */}
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0b2b33] to-[#0f3b45]" />
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-            {/* linhas sutis */}
             <svg className="h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
               <defs>
                 <pattern id="gridDark" width="28" height="28" patternUnits="userSpaceOnUse">
@@ -255,7 +309,6 @@ export default function LoginPage() {
             </svg>
           </div>
 
-          {/* imagem principal */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="relative w-full h-full flex items-center justify-center">
               <div className="relative w-[95%] h-[80%]">
@@ -268,7 +321,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* textos rotativos animados */}
           <div className="absolute inset-x-0 bottom-16 flex justify-center px-10">
             <div className="relative w-full max-w-2xl h-24 flex items-center justify-center">
               {ROTATING_TEXTS.map((text, index) => (
@@ -291,7 +343,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* modal de cadastro */}
       {openCadastro && (
         <div
           role="dialog"
