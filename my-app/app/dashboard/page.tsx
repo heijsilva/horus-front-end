@@ -18,7 +18,8 @@ import {
 } from 'chart.js';
 
 import { fetcher } from '@/lib/fetcher'; 
-import { useDashboardStore } from '@/stores/dashboardStore'; 
+import { useDashboardStore } from '@/stores/dashboardStore';
+import MapComponent from '../components/MapComponent';
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +55,7 @@ interface DoughnutItem {
 interface StatsCard {
   title: string;
   value: number;
-  change: number; // 0.1101 para +11.01%
+  change: number;
 }
 
 // Mock de dados para uma lista maior de alertas em Recife
@@ -83,12 +84,12 @@ interface DashboardApiData {
 
 // --- CONSTANTES DE CONFIGURAÇÃO DO CHART.JS ---
 const DOUGHNUT_COLORS = [
-  'rgb(30, 58, 138)', // Azul escuro
-  'rgb(59, 130, 246)', // Azul principal
-  'rgb(96, 165, 250)', // Azul claro
-  'rgb(147, 197, 253)', // Azul muito claro
+  'rgb(30, 58, 138)',
+  'rgb(59, 130, 246)',
+  'rgb(96, 165, 250)',
+  'rgb(147, 197, 253)',
 ];
-const BORDER_COLOR = 'rgb(24, 24, 27)'; // Cor de fundo do chart
+const BORDER_COLOR = 'rgb(24, 24, 27)';
 
 // Opções de Gráfico de Linha
 const lineChartOptions = {
@@ -155,8 +156,8 @@ export default function DashboardPage() {
     return {
         ...apiDataChart,
         datasets: apiDataChart.datasets.map((ds, index) => {
-            const primaryColor = 'rgb(34, 211, 238)'; // cyan-400
-            const secondaryColor = 'rgb(96, 165, 250)'; // blue-400
+            const primaryColor = 'rgb(34, 211, 238)';
+            const secondaryColor = 'rgb(96, 165, 250)';
 
             const borderColor = index === 0 ? primaryColor : secondaryColor;
             const backgroundColor = index === 0 ? 'rgba(34, 211, 238, 0.2)' : 'rgba(96, 165, 250, 0.1)';
@@ -204,7 +205,6 @@ export default function DashboardPage() {
   const renderStatsCards = () => {
     const cards = data?.stats || [];
     
-    // Configurações estáticas de cor para os cards
     const staticCardConfigs = [
       { title: 'Descarte', color: 'from-blue-500 to-blue-600' },
       { title: 'Ocorrências', color: 'from-blue-400 to-blue-500' },
@@ -327,38 +327,31 @@ export default function DashboardPage() {
         </div>
 
         {/* Grid principal */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
           
-          {/* LOCAIS DESCARTES (Anteriormente: Descartes por período) */}
-          <div className="lg:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          {/* LOCAIS DESCARTES - MAPA */}
+          <div className="xl:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="mb-4 text-lg font-semibold">Locais Descarte</h2>
-            <div className="flex h-80 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-950/30 to-blue-950/30">
-              <div className="relative h-full w-full">
-                {/* Pontos no mapa simulados */}
-                <div className="absolute left-1/4 top-1/3 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-                <div className="absolute right-1/3 top-1/2 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-                <div className="absolute bottom-1/4 left-1/2 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-                <div className="absolute right-1/4 top-2/3 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-                <div className="absolute bottom-1/3 right-1/2 h-3 w-3 animate-pulse rounded-full bg-cyan-400" />
-              </div>
+            <div className="h-[450px]">
+              <MapComponent />
             </div>
           </div>
           
-          {/* ALERTAS RECENTES (Anteriormente: Impacto Ambiental) */}
+          {/* ALERTAS RECENTES */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="mb-4 text-lg font-semibold">Alertas recentes</h2>
-            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-zinc-900">
               {renderAlerts()}
             </div>
           </div>
 
 
-          {/* IMPACTO AMBIENTAL (Anteriormente: Alertas recentes) */}
+          {/* IMPACTO AMBIENTAL */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="mb-4 text-lg font-semibold">Impacto Ambiental</h2>
             <div className="h-64 flex items-center justify-center">
               {isLoading ? (
-                 <div className="text-zinc-500">Carregando dados do rosca...</div>
+                <div className="text-zinc-500">Carregando dados do rosca...</div>
               ) : (
                 <Doughnut data={doughnutChart} options={doughnutOptions} />
               )}
@@ -386,15 +379,14 @@ export default function DashboardPage() {
           </div>
 
 
-          {/* DESCARTES POR PERÍODO (Anteriormente: Locais Descarte) */}
-          <div className="lg:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          {/* DESCARTES POR PERÍODO */}
+          <div className="xl:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">
                   Descartes por período (Filtro: {timePeriod.toUpperCase()})
                 </h2>
                 <div className="mt-2 flex gap-4 text-sm">
-                  {/* Botão de filtro */}
                   <button 
                     onClick={() => setTimePeriod('daily')} 
                     className={`${timePeriod === 'daily' ? 'text-cyan-400 underline underline-offset-4' : 'text-zinc-400 hover:text-zinc-100'}`}
@@ -416,7 +408,6 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-            {/* Exibe um loading ou o gráfico */}
             <div className="h-64 flex items-center justify-center">
               {isLoading ? (
                 <div className="text-zinc-500">Carregando dados do gráfico...</div>
