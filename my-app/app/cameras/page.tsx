@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 
 const cameras = [
@@ -28,6 +28,17 @@ export default function CamerasPage() {
     video5: video5Ref,
     video6: video6Ref,
   };
+
+  // Iniciar todos os vídeos automaticamente quando a página carregar
+  useEffect(() => {
+    Object.values(videoRefs).forEach((ref) => {
+      if (ref.current) {
+        ref.current.play().catch((error) => {
+          console.log('Autoplay bloqueado pelo navegador:', error);
+        });
+      }
+    });
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-zinc-950">
@@ -82,25 +93,14 @@ export default function CamerasPage() {
                       ref={videoRefs[camera.videoRef as keyof typeof videoRefs]}
                       className="h-full w-full object-cover"
                       controls
+                      autoPlay
                       muted
                       loop
+                      playsInline
                     >
                       <source src={`/${camera.videoRef}.mp4`} type="video/mp4" />
                       Seu navegador não suporta vídeo.
                     </video>
-
-                    {/* Overlay com ícone de play (quando pausado) */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cyan-400/20 backdrop-blur-sm">
-                        <svg
-                          className="h-8 w-8 text-cyan-400"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
 
                     {/* Badge de status ao vivo */}
                     <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 backdrop-blur-sm">
