@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const API_URL = 'https://studious-space-journey-pxw44v6xvxg2659p-8000.app.github.dev';
+const API_URL = 'http://localhost:6660';
 
 function Field({
   id,

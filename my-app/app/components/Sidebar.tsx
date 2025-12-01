@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 // ===============================================
 //  TIPOS DE NAVEGAÇÃO
@@ -99,7 +99,36 @@ const navSections: NavSection[] = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
+  const router = useRouter();
+  const [userName, setUserName] = useState('Usuário');
+
+  useEffect(() => {
+    // Pega o nome do usuário do localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        // Pega o primeiro nome
+        const firstName = user.nome?.split(' ')[0] || 'Usuário';
+        setUserName(firstName);
+      } catch (err) {
+        console.error('Erro ao carregar usuário:', err);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Remove os dados do localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Redireciona para a página de login
+    router.push('/');
+  };
+
+  // Pega a primeira letra do nome para o avatar
+  const avatarLetter = userName.charAt(0).toUpperCase();
 
   return (
     <aside className="fixed left-0 top-0 w-64 h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col">
@@ -107,9 +136,9 @@ export default function Sidebar() {
       <div className="p-4 border-b border-zinc-800">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-zinc-900 font-semibold">
-            U
+            {avatarLetter}
           </div>
-          <p className="text-sm font-medium text-zinc-100 truncate">usuário</p>
+          <p className="text-sm font-medium text-zinc-100 truncate">{userName}</p>
         </div>
       </div>
 
@@ -159,7 +188,10 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="p-3 border-t border-zinc-800">
-        <button className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+        >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
