@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth
+from app.routes import auth, users  # Adicione users aqui
 from app.config.database import test_connection
 from contextlib import asynccontextmanager
 
@@ -25,13 +25,17 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:7777",
         "http://127.0.0.1:7777",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Incluir rotas
 app.include_router(auth.router)
+app.include_router(users.router)  # Adicione esta linha
 
 @app.get("/", tags=["Root"])
 async def root():
